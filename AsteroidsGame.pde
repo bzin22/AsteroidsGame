@@ -9,17 +9,25 @@ public void draw()
 }
 class SpaceShip extends Floater  
 {   
-    protected int corners, xCorners, yCorners, myColor;
-    protected double myCenterX, myCenterY, myPointDirection, myDirectionX,myDirectionY;
-    SpaceShip()
+    
+    public SpaceShip()
     {
-      
+        protected int corners;  //the number of corners, a triangular floater has 3   
+        protected int[] xCorners;   
+        protected int[] yCorners;   
+        protected int myColor;   
+        protected double myCenterX, myCenterY; //holds center coordinates   
+        protected double myDirectionX, myDirectionY; //holds x and y coordinates of the vector for direction of travel   
+        protected double myPointDirection; //holds current direction the ship is pointing in degrees    
     }
     public void setX(int x)
     {
       x = intX; 
     }
     public void getX()
+    {
+
+    }
     //your code here
 }
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
