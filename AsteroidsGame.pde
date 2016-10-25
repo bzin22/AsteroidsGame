@@ -38,8 +38,8 @@ public void keyPressed()
      }
      if (key == 'q') 
       {
-          voyager.setY((int)Math.random()*500);
-          voyager.setX((int)Math.random()*500);
+          voyager.setY( (int)(Math.random()*500) );
+          voyager.setX( (int)(Math.random()*500) );
           System.out.println("happy");
       }
    }
