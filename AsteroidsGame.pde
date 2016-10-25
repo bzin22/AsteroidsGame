@@ -1,19 +1,28 @@
 
 SpaceShip voyager = new SpaceShip();
 Stars [] galaxy = new Stars[200];
-
+Rockets booster = new Rockets();
 public void setup() 
   {
     size(1000, 1000);
+    for (int i = 0; i < galaxy.length; i++) 
+    {
+        galaxy[i] = new Stars();   
+    }
+
   }
 public void draw() 
   {
     background(0);
     for (int i = 0; i < galaxy.length; i++) 
     {
-        galaxy[i] = new Stars();   
-        galaxy[i].show();
+       galaxy[i].show();
     }
+    if (key == 's')
+    {
+      booster.show();
+    }
+    booster.move();
     voyager.show();
     voyager.move();
   }
@@ -21,42 +30,109 @@ public void keyPressed()
    {
      if (key == 'a') 
      {
-        voyager.rotate(-12);  
+        voyager.rotate(-12); 
+        booster.rotate(-12); 
      }
      if (key == 'd')
      {
         voyager.rotate(12);
+        booster.rotate(12);
      }
      if (key == 's') 
      {
         voyager.accelerate(2);
+        booster.accelerate(2);
      }
      if (key == 'w') 
      {
         voyager.setDirectionX(0);
         voyager.setDirectionY(0);
+        booster.setDirectionX(0);
+        booster.setDirectionY(0);
      }
      if (key == 'q') 
       {
-          voyager.setY( (int)(Math.random()*500) );
-          voyager.setX( (int)(Math.random()*500) );
-          System.out.println("happy");
+          voyager.setY( (int)(Math.random()*1000) );
+          voyager.setX( (int)(Math.random()*1000) );
+          booster.setY( (int)(Math.random()*1000) );
+          booster.setX( (int)(Math.random()*1000) );
       }
    }
 class Stars
 {
-  private int radius, colors;
+  private int radius, colors, myX, myY;
   public Stars()
   {
     radius = (int)(Math.random()*15);
     colors = (int)(Math.random()*255);
+    myX = (int)(Math.random()*1000);
+    myY = (int)(Math.random()*1000);
   }
   public void show()
   {
       fill(colors,colors,colors);
       noStroke();
-      ellipse( (int)(Math.random()*1000), (int)(Math.random()*1000), radius, radius);
+      ellipse( myX, myY, radius, radius);
   }
+}
+class Rockets extends Floater 
+{   
+   public Rockets()
+     { 
+        corners = 5;  //the number of corners, a triangular floater has 3   
+        int[] xS = { 0, -25, -15, -25, 0 } ;   
+        int[] yS = { -2, -5, 0, 5, 2 } ;  
+        xCorners = xS;
+        yCorners = yS; 
+        myColor = color(0,0,255);   
+        myCenterX = 500;
+        myCenterY = 500; //holds center coordinates   
+        myDirectionX = 0;
+        myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel   
+        myPointDirection = 0; //holds current direction the ship is pointing in degrees
+     } 
+   public void setX(int x)
+     {
+        myCenterX = x;
+     }
+   public int getX()
+     {
+        return (int)myCenterX;
+     }
+   public void setY(int y)
+     {
+        myCenterY = y;
+     }
+   public int getY()
+     {
+        return (int)myCenterY;
+     }
+   public void setDirectionX(double x)
+     {
+        myDirectionX = x;
+     }
+   public double getDirectionX()
+     {
+        return (int)myDirectionX;
+     }
+   public void setDirectionY(double y)
+     {
+        myDirectionY = y;
+     }
+   public double getDirectionY() 
+     {
+        return (int)myDirectionY;  
+     }
+   public void setPointDirection(int degrees)
+     {
+        myPointDirection = degrees;
+     }
+   public double getPointDirection() 
+     {
+       return (int)myPointDirection;
+     }
+
+   
 }
 class SpaceShip extends Floater 
 {   
