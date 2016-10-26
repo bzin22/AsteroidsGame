@@ -112,46 +112,16 @@ class Rockets extends Floater
         myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel   
         myPointDirection = 0; //holds current direction the ship is pointing in degrees
      } 
-   public void setX(int x)
-     {
-        myCenterX = x;
-     }
-   public int getX()
-     {
-        return (int)myCenterX;
-     }
-   public void setY(int y)
-     {
-        myCenterY = y;
-     }
-   public int getY()
-     {
-        return (int)myCenterY;
-     }
-   public void setDirectionX(double x)
-     {
-        myDirectionX = x;
-     }
-   public double getDirectionX()
-     {
-        return (int)myDirectionX;
-     }
-   public void setDirectionY(double y)
-     {
-        myDirectionY = y;
-     }
-   public double getDirectionY() 
-     {
-        return (int)myDirectionY;  
-     }
-   public void setPointDirection(int degrees)
-     {
-        myPointDirection = degrees;
-     }
-   public double getPointDirection() 
-     {
-       return (int)myPointDirection;
-     }   
+   public void setX(int x){ myCenterX = x; }
+   public int getX() { return (int)myCenterX; }
+   public void setY(int y) { myCenterY = y; }
+   public int getY() { return (int)myCenterY;  }
+   public void setDirectionX(double x) { myDirectionX = x; }
+   public double getDirectionX() { return (int)myDirectionX; }
+   public void setDirectionY(double y) {  myDirectionY = y; }
+   public double getDirectionY()  { return (int)myDirectionY; }
+   public void setPointDirection(int degrees) { myPointDirection = degrees; }
+   public double getPointDirection() { return (int)myPointDirection; }   
 }
 class SpaceShip extends Floater 
 {   
@@ -216,9 +186,9 @@ class Asteroids extends Floater
   public Asteroids()
   {
     speed = (int)(Math.random()*5)-10;
-    corners = 4;  //the number of corners, a triangular floater has 3   
-    int[] xS = { 20, -20, -20, 20} ;   
-    int[] yS = { 20, 20, -20, -20} ;  
+    corners = 6;  //the number of corners, a triangular floater has 3   
+    int[] xS = { 20, 10, -10, -20, -10, 10} ;   
+    int[] yS = { 0, -20, -20, 0, 20, 20} ;  
     xCorners = xS;
     yCorners = yS; 
     myColor = color(100,93,93);   
