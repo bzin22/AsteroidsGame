@@ -3,7 +3,7 @@ SpaceShip voyager = new SpaceShip();
 Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
 Asteroids [] rocks = new Asteroids[16];
-int myVariable;
+int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
   {
     size(1000, 1000);
@@ -19,49 +19,58 @@ public void setup()
 public void draw() 
   {
     background(0);
-    for (int i = 0; i < galaxy.length; i++) 
+    for (int i = 0; i < galaxy.length; i++) // shows stars 
     {
        galaxy[i].show();
     }
-    for (int j = 0; j < rocks.length; j++) 
+    for (int j = 0; j < rocks.length; j++) // shows and moves asteroids
     {
         rocks[j].show();   
         rocks[j].move();
     }
-    if (key == 's')
+    if (key == 's') // shows rocket booster whenever the ship acclerates
     {
       booster.show();
     }
     booster.move();
     voyager.show();
     voyager.move();
-    
+    // checking for collisions
+    for (int i = 0; i < rocks.length; i++) 
+    {
+      if ( dist( voyager.getX(), voyager.getY(), rocks[i].getX(), rocks[i].getY() ) <= 25 )
+      {
+        textSize(40);
+        text("BOOM!!!", 400, 500);
+        text("You ded :( ", 400, 550);
+      } 
+    }
   }
 public void keyPressed() 
    {
-     if (key == 'a') 
+     if (key == 'a') // rotate counterclockwise
      {
         voyager.rotate(-12); 
         booster.rotate(-12); 
      }
-     if (key == 'd')
+     if (key == 'd')// rotate clockwise
      {
         voyager.rotate(12);
         booster.rotate(12);
      }
-     if (key == 's') 
+     if (key == 's') // acclerate
      {
         voyager.accelerate(2);
         booster.accelerate(2);
      }
-     if (key == 'w') 
+     if (key == 'w') // stop
      {
         voyager.setDirectionX(0);
         voyager.setDirectionY(0);
         booster.setDirectionX(0);
         booster.setDirectionY(0);
      }
-     if (key == 'q') 
+     if (key == 'q') // hyperspace
       {
           myVariable = (int)(Math.random()*1000);
           voyager.setY( myVariable );
@@ -91,7 +100,7 @@ class Rockets extends Floater
 {   
    public Rockets()
      { 
-        corners = 5;  //the number of corners, a triangular floater has 3   
+        corners = 5;  // draws rockets  
         int[] xS = { 0, -25, -15, -25, 0 } ;   
         int[] yS = { -2, -5, 0, 5, 2 } ;  
         xCorners = xS;
