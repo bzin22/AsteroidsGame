@@ -186,7 +186,7 @@ class Asteroids extends Floater
   public Asteroids()
   {
     speed = (int)(Math.random()*5)-10;
-    corners = 6;  //the number of corners, a triangular floater has 3   
+    corners = 6;  //the number of corners, a hexagon floater has 6    
     int[] xS = { 20, 10, -10, -20, -10, 10} ;   
     int[] yS = { 0, -20, -20, 0, 20, 20} ;  
     xCorners = xS;
