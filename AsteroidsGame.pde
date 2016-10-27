@@ -2,7 +2,7 @@
 SpaceShip voyager = new SpaceShip();
 Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
-Asteroids [] rocks = new Asteroids[16];
+Asteroids [] rocks = new Asteroids[25];
 int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
   {
@@ -127,9 +127,9 @@ class SpaceShip extends Floater
 {   
    public SpaceShip()
      { 
-        corners = 4;  //the number of corners, a triangular floater has 3   
-        int[] xS = { 10, -20, -15, -20} ;   
-        int[] yS = { 0, 10, 0, -10} ;  
+        corners = 9;  //the number of corners, a triangular floater has 3   
+        int[] xS = { 20, 0, 0, -3, -10, -10, -3, 0, 0 } ;   
+        int[] yS = { 0, -5, -10, -5, -5, 5, 5, 10, 5 } ;  
         xCorners = xS;
         yCorners = yS; 
         myColor = color(255,0,0);   
