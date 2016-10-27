@@ -105,7 +105,7 @@ class Rockets extends Floater
         int[] yS = { -2, -5, 0, 5, 2 } ;  
         xCorners = xS;
         yCorners = yS; 
-        myColor = color(0,0,255);   
+        myColor = color(45,201,225);   
         myCenterX = 500;
         myCenterY = 500; //holds center coordinates   
         myDirectionX = 0;
