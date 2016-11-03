@@ -2,7 +2,7 @@
 SpaceShip voyager = new SpaceShip();
 Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
-Asteroids [] rocks = new Asteroids[25];
+ArrayList <Asteroids> rocks = new ArrayList <Asteroids>();
 int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
   {
@@ -11,10 +11,16 @@ public void setup()
     {
         galaxy[i] = new Stars();   
     }
-    for (int j = 0; j < rocks.length; j++) 
+
+    for (int j = 0; j < 20; j++) 
+    {
+      rocks.add(new Asteroids());
+    }
+    /* for (int j = 0; j < rocks.length; j++) 
     {
         rocks[j] = new Asteroids();   
     }
+    */
   }
 public void draw() 
   {
@@ -23,10 +29,10 @@ public void draw()
     {
        galaxy[i].show();
     }
-    for (int j = 0; j < rocks.length; j++) // shows and moves asteroids
+    for (int j = 0; j < rocks.size(); j++) // shows and moves asteroids
     {
-        rocks[j].show();   
-        rocks[j].move();
+        rocks.get(j).show();   
+        rocks.get(j).move();
     }
     if (key == 's') // shows rocket booster whenever the ship acclerates
     {
@@ -36,13 +42,14 @@ public void draw()
     voyager.show();
     voyager.move();
     // checking for collisions
-    for (int i = 0; i < rocks.length; i++) 
+    for (int i = 0; i < rocks.size(); i++) 
     {
-      if ( dist( voyager.getX(), voyager.getY(), rocks[i].getX(), rocks[i].getY() ) <= 25 )
+      if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
       {
         textSize(40);
         text("BOOM!!!", 400, 500);
         text("You ded :( ", 400, 550);
+        // make an animation for spaceship destruction
       } 
     }
   }
@@ -194,8 +201,8 @@ class Asteroids extends Floater
     myColor = color(100,93,93);   
     myCenterX = (int)(Math.random()*1000);
     myCenterY = (int)(Math.random()*1000); //holds center coordinates   
-    myDirectionX = 0;
-    myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel   
+    myDirectionX = (int)(Math.random()*2);
+    myDirectionY = (int)(Math.random()*2); //holds x and y coordinates of the vector for direction of travel   
     myPointDirection = 0; //holds current direction the ship is pointing in degrees
   }
   public void move()
