@@ -49,6 +49,7 @@ public void draw()
         textSize(40);
         text("BOOM!!!", 400, 500);
         text("You ded :( ", 400, 550);
+        rocks.remove(i);
         // make an animation for spaceship destruction
       } 
     }
@@ -103,6 +104,27 @@ class Stars
       ellipse( myX, myY, radius, radius);
   }
 }
+/*class Phasers extends Floater
+{
+  private double dRadians;
+  public Phasers(SpaceShip voyager)
+  {
+    corners = 9;  //the number of corners, a triangular floater has 3   
+    int[] xS = { 20, 0, 0, -3, -10, -10, -3, 0, 0 } ;   
+    int[] yS = { 0, -5, -10, -5, -5, 5, 5, 10, 5 } ;  
+    xCorners = xS;
+    yCorners = yS; 
+    myColor = color(255,0,0);   
+    myCenterX = 500;
+    myCenterY = 500; //holds center coordinates   
+    myDirectionX = 5 * Math.cos(dRadians) + the myDirectionX;
+    myDirectionY = 5 * Math.sin(dRadians) + the myDirectionY; //holds x and y coordinates of the vector for direction of travel   
+    myPointDirection = 0; //holds current direction the ship is pointing in degrees
+    Radians =myPointDirection*(Math.PI/180);
+  }
+  // needs to REWRITE SHOW FUNCITION
+}
+*/
 class Rockets extends Floater 
 {   
    public Rockets()
