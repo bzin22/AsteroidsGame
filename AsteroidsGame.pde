@@ -4,7 +4,7 @@ Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
 ArrayList <Asteroids> rocks = new ArrayList <Asteroids>();
 ArrayList <Phasers> bullet = new ArrayList <Phasers>();
-
+ArrayList <Destruction> ofSpaceship = new ArrayList <Destruction>();
 
 int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
@@ -23,11 +23,16 @@ public void setup()
 public void draw() 
   {
     background(0);
+    for (int a = 0; a < ofSpaceship.size(); a++) 
+    {
+      ofSpaceship.get(a).move();
+      ofSpaceship.get(a).show();
+    }
     for (int l = 0; l < bullet.size(); l++) // shows & moves the phasers when hitting spacebar
-       {
-         bullet.get(l).move();
-         bullet.get(l).show();
-       }
+     {
+       bullet.get(l).move();
+       bullet.get(l).show();
+     }
     for (int i = 0; i < galaxy.length; i++) // shows stars 
     {
        galaxy[i].show();
@@ -44,6 +49,7 @@ public void draw()
     booster.move();
     voyager.show();
     voyager.move();
+    
     // checking for collisions
     
     for (int i = 0; i < rocks.size(); i++) 
@@ -54,16 +60,18 @@ public void draw()
         {
           rocks.remove(i);
           bullet.remove(k);
-          bullet.add(new Phasers(voyager));
+          
         }
       }
       if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
       {
         textSize(40);
         text("BOOM!!!", 400, 500);
-        text("You ded :( ", 400, 550);
-        
-        // make an animation for spaceship destruction sometime later
+        text("YOUR SHIP WAS DESTROYED.", 400, 550);
+        // animation of destruction
+        voyager.setColor(0);
+        booster.setColor(0);
+        ofSpaceship.add(new Destruction(voyager));
       } 
     }
   }
@@ -104,6 +112,38 @@ public void keyPressed()
           booster.setX( myVariable );
       }
    }
+class Destruction extends Floater // destruction of ship when it hits asteroid
+{
+  public Destruction(SpaceShip aShip)
+   { 
+      corners = 5;  // draws fragments  
+      int[] xS = { -9, -6, -3, 6, 0 } ;   
+      int[] yS = { 0, 9, 6, 6, 0} ;  
+      xCorners = xS;
+      yCorners = yS; 
+      myColor = color(255,255,255);   
+      myCenterX = aShip.getX();
+      myCenterY = aShip.getY(); //holds center coordinates   
+      myDirectionX = (int)(Math.random()*10);
+      myDirectionY = (int)(Math.random()*10); //holds x and y coordinates of the vector for direction of travel   
+      myPointDirection = 0; //holds current direction the ship is pointing in degrees
+   } 
+   public void setX(int x){ myCenterX = x; }
+   public int getX() { return (int)myCenterX; }
+   public void setY(int y) { myCenterY = y; }
+   public int getY() { return (int)myCenterY;  }
+   public void setDirectionX(double x) { myDirectionX = x; }
+   public double getDirectionX() { return (int)myDirectionX; }
+   public void setDirectionY(double y) {  myDirectionY = y; }
+   public double getDirectionY()  { return (int)myDirectionY; }
+   public void setPointDirection(int degrees) { myPointDirection = degrees; }
+   public double getPointDirection() { return (int)myPointDirection; }   
+
+   public void move()
+   {
+      super.move();
+   }
+}
 class Stars
 {
   private int radius, colors, myX, myY;
@@ -176,6 +216,14 @@ class Rockets extends Floater
         myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel   
         myPointDirection = 0; //holds current direction the ship is pointing in degrees
      } 
+  public void setColor(int c)
+  {
+    myColor = color(c,c,c);
+  }
+  public int getColor()
+  {
+    return (int)myColor;
+  }
    public void setX(int x){ myCenterX = x; }
    public int getX() { return (int)myCenterX; }
    public void setY(int y) { myCenterY = y; }
@@ -203,6 +251,14 @@ class SpaceShip extends Floater
         myDirectionY = 0; //holds x and y coordinates of the vector for direction of travel   
         myPointDirection = 0; //holds current direction the ship is pointing in degrees
      } 
+    public void setColor(int c)
+    {
+      myColor = color(c,c,c);
+    }
+    public int getColor()
+    {
+      return (int)myColor;
+    }
    public void setX(int x)
      {
         myCenterX = x;
