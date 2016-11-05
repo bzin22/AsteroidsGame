@@ -1,8 +1,11 @@
-
+// AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
 SpaceShip voyager = new SpaceShip();
 Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
 ArrayList <Asteroids> rocks = new ArrayList <Asteroids>();
+ArrayList <Phasers> bullet = new ArrayList <Phasers>();
+
+
 int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
   {
@@ -11,20 +14,20 @@ public void setup()
     {
         galaxy[i] = new Stars();   
     }
-
+   
     for (int j = 0; j < 20; j++) 
     {
       rocks.add(new Asteroids());
     }
-    /* for (int j = 0; j < rocks.length; j++) 
-    {
-        rocks[j] = new Asteroids();   
-    }
-    */
   }
 public void draw() 
   {
     background(0);
+    for (int l = 0; l < bullet.size(); l++) // shows & moves the phasers when hitting spacebar
+       {
+         bullet.get(l).move();
+         bullet.get(l).show();
+       }
     for (int i = 0; i < galaxy.length; i++) // shows stars 
     {
        galaxy[i].show();
@@ -42,20 +45,34 @@ public void draw()
     voyager.show();
     voyager.move();
     // checking for collisions
+    
     for (int i = 0; i < rocks.size(); i++) 
     {
+      for (int k = 0; k < bullet.size(); k++) 
+      {
+        if ( dist( bullet.get(k).getX(), bullet.get(k).getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25) 
+        {
+          rocks.remove(i);
+          bullet.remove(k);
+          bullet.add(new Phasers(voyager));
+        }
+      }
       if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
       {
         textSize(40);
         text("BOOM!!!", 400, 500);
         text("You ded :( ", 400, 550);
-        rocks.remove(i);
-        // make an animation for spaceship destruction
+        
+        // make an animation for spaceship destruction sometime later
       } 
     }
   }
 public void keyPressed() 
    {
+     if (key == ' ') // shoot phasers
+     {
+       bullet.add(new Phasers(voyager));
+     }
      if (key == 'a') // rotate counterclockwise
      {
         voyager.rotate(-12); 
@@ -104,27 +121,45 @@ class Stars
       ellipse( myX, myY, radius, radius);
   }
 }
-/*class Phasers extends Floater
+class Phasers extends Floater
 {
   private double dRadians;
-  public Phasers(SpaceShip voyager)
+  private int nDegreesOfRotation;
+  public Phasers(SpaceShip theShip)
   {
-    corners = 9;  //the number of corners, a triangular floater has 3   
-    int[] xS = { 20, 0, 0, -3, -10, -10, -3, 0, 0 } ;   
-    int[] yS = { 0, -5, -10, -5, -5, 5, 5, 10, 5 } ;  
-    xCorners = xS;
-    yCorners = yS; 
-    myColor = color(255,0,0);   
-    myCenterX = 500;
-    myCenterY = 500; //holds center coordinates   
-    myDirectionX = 5 * Math.cos(dRadians) + the myDirectionX;
-    myDirectionY = 5 * Math.sin(dRadians) + the myDirectionY; //holds x and y coordinates of the vector for direction of travel   
-    myPointDirection = 0; //holds current direction the ship is pointing in degrees
-    Radians =myPointDirection*(Math.PI/180);
+    myColor = color(0,255,0);   
+    myCenterX = theShip.getX();
+    myCenterY = theShip.getY(); //holds center coordinates   
+    myPointDirection = theShip.getPointDirection(); //holds current direction the ship is pointing in degrees
+    dRadians = myPointDirection*(Math.PI/180);
+    myDirectionX = 5 * Math.cos(dRadians) + theShip.getDirectionX();
+    myDirectionY = 5 * Math.sin(dRadians) + theShip.getDirectionY(); //holds x and y coordinates of the vector for direction of travel   
   }
-  // needs to REWRITE SHOW FUNCITION
+   
+   public void setX(int x){ myCenterX = x; }
+   public int getX() { return (int)myCenterX; }
+   public void setY(int y) { myCenterY = y; }
+   public int getY() { return (int)myCenterY;  }
+   public void setDirectionX(double x) { myDirectionX = x; }
+   public double getDirectionX() { return (int)myDirectionX; }
+   public void setDirectionY(double y) {  myDirectionY = y; }
+   public double getDirectionY()  { return (int)myDirectionY; }
+   public void setPointDirection(int degrees) { myPointDirection = degrees; }
+   public double getPointDirection() { return (int)myPointDirection; }   
+  
+  public void move()
+  {
+    myCenterX += myDirectionX;
+    myCenterY += myDirectionY;
+  }
+  public void show()
+  {
+    noStroke();
+    fill(0,255,0);
+    ellipse( (int)myCenterX, (int)myCenterY, 5, 5);
+  }
 }
-*/
+
 class Rockets extends Floater 
 {   
    public Rockets()
