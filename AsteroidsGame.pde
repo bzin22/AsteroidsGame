@@ -60,9 +60,9 @@ public void draw()
         {
           rocks.remove(i);
           bullet.remove(k);
-          
         }
       }
+
       if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
       {
         textSize(40);
@@ -83,13 +83,13 @@ public void keyPressed()
      }
      if (key == 'a') // rotate counterclockwise
      {
-        voyager.rotate(-12); 
-        booster.rotate(-12); 
+        voyager.rotate(-30); 
+        booster.rotate(-30); 
      }
      if (key == 'd')// rotate clockwise
      {
-        voyager.rotate(12);
-        booster.rotate(12);
+        voyager.rotate(30);
+        booster.rotate(30);
      }
      if (key == 's') // acclerate
      {
@@ -117,15 +117,15 @@ class Destruction extends Floater // destruction of ship when it hits asteroid
   public Destruction(SpaceShip aShip)
    { 
       corners = 5;  // draws fragments  
-      int[] xS = { -9, -6, -3, 6, 0 } ;   
+      int[] xS = { -9, -6, 0, 6, 0 } ;   
       int[] yS = { 0, 9, 6, 6, 0} ;  
       xCorners = xS;
       yCorners = yS; 
-      myColor = color(255,255,255);   
+      myColor = color(203,88,88);   
       myCenterX = aShip.getX();
       myCenterY = aShip.getY(); //holds center coordinates   
-      myDirectionX = (int)(Math.random()*10);
-      myDirectionY = (int)(Math.random()*10); //holds x and y coordinates of the vector for direction of travel   
+      myDirectionX = (int)(Math.random()*5);
+      myDirectionY = (int)(Math.random()*5); //holds x and y coordinates of the vector for direction of travel   
       myPointDirection = 0; //holds current direction the ship is pointing in degrees
    } 
    public void setX(int x){ myCenterX = x; }
@@ -144,7 +144,7 @@ class Destruction extends Floater // destruction of ship when it hits asteroid
       super.move();
    }
 }
-class Stars
+class Stars // background
 {
   private int radius, colors, myX, myY;
   public Stars()
@@ -306,7 +306,7 @@ class Asteroids extends Floater
   public Asteroids()
   {
     speed = (int)(Math.random()*5)-10;
-    corners = 6;  //the number of corners, a hexagon floater has 6    
+    corners = 6;  // the number of corners, a hexagon floater has 6    
     int[] xS = { 20, 10, -10, -20, -10, 10} ;   
     int[] yS = { 0, -20, -20, 0, 20, 20} ;  
     xCorners = xS;
@@ -364,7 +364,7 @@ class Asteroids extends Floater
        return (int)myPointDirection;
      } 
 }
-abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
+abstract class Floater // Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
   protected int corners;  //the number of corners, a triangular floater has 3   
   protected int[] xCorners;   
