@@ -1,4 +1,5 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
+boolean gameOver = false;
 SpaceShip voyager = new SpaceShip();
 Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
@@ -22,57 +23,67 @@ public void setup()
   }
 public void draw() 
   {
-    background(0);
-    for (int a = 0; a < ofSpaceship.size(); a++) 
+    if (gameOver == false)
     {
-      ofSpaceship.get(a).move();
-      ofSpaceship.get(a).show();
-    }
-    for (int l = 0; l < bullet.size(); l++) // shows & moves the phasers when hitting spacebar
-     {
-       bullet.get(l).move();
-       bullet.get(l).show();
-     }
-    for (int i = 0; i < galaxy.length; i++) // shows stars 
-    {
-       galaxy[i].show();
-    }
-    for (int j = 0; j < rocks.size(); j++) // shows and moves asteroids
-    {
-        rocks.get(j).show();   
-        rocks.get(j).move();
-    }
-    if (key == 's') // shows rocket booster whenever the ship acclerates
-    {
-      booster.show();
-    }
-    booster.move();
-    voyager.show();
-    voyager.move();
-    
-    // checking for collisions
-    
-    for (int i = 0; i < rocks.size(); i++) 
-    {
-      for (int k = 0; k < bullet.size(); k++) 
+      background(0);
+      for (int a = 0; a < ofSpaceship.size(); a++) 
       {
-        if ( dist( bullet.get(k).getX(), bullet.get(k).getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25) 
-        {
-          rocks.remove(i);
-          bullet.remove(k);
-        }
+        ofSpaceship.get(a).move();
+        ofSpaceship.get(a).show();
       }
-
-      if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
+      for (int l = 0; l < bullet.size(); l++) // shows & moves the phasers when hitting spacebar
+       {
+         bullet.get(l).move();
+         bullet.get(l).show();
+       }
+      for (int i = 0; i < galaxy.length; i++) // shows stars 
       {
-        textSize(40);
-        text("BOOM!!!", 400, 500);
-        text("YOUR SHIP WAS DESTROYED.", 400, 550);
-        // animation of destruction
-        voyager.setColor(0);
-        booster.setColor(0);
-        ofSpaceship.add(new Destruction(voyager));
-      } 
+         galaxy[i].show();
+      }
+      for (int j = 0; j < rocks.size(); j++) // shows and moves asteroids
+      {
+          rocks.get(j).show();   
+          rocks.get(j).move();
+      }
+      if (key == 's') // shows rocket booster whenever the ship acclerates
+      {
+        booster.show();
+      }
+      booster.move();
+      voyager.show();
+      voyager.move();
+      
+      // checking for collisions
+      
+      for (int i = 0; i < rocks.size(); i++) 
+      {
+        for (int k = 0; k < bullet.size(); k++) 
+        {
+          if ( dist( bullet.get(k).getX(), bullet.get(k).getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25) 
+          {
+            rocks.remove(i);
+            bullet.remove(k);
+            break;
+          }
+        }
+
+        if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
+        {
+          // animation of destruction
+          voyager.setColor(0);
+          booster.setColor(0);
+          ofSpaceship.add(new Destruction(voyager));
+          gameOver = true;
+        } 
+      }
+    }
+    if (gameOver == true)
+    {
+      background(255,255,255);
+       textSize(40);
+       text("BOOM!!!", 400, 500);
+       text("YOUR SHIP WAS DESTROYED.", 200, 550);
+       text("Please Refresh your screen to continue.", 200, 600);
     }
   }
 public void keyPressed() 
