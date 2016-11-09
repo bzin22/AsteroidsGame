@@ -1,6 +1,8 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
 boolean gameOver = false;
+int countdown = 0;
 SpaceShip voyager = new SpaceShip();
+Borg cube = new Borg();
 Stars [] galaxy = new Stars[200];
 Rockets booster = new Rockets();
 ArrayList <Asteroids> rocks = new ArrayList <Asteroids>();
@@ -23,6 +25,7 @@ public void setup()
   }
 public void draw() 
   {
+    // countdown++;
     if (gameOver == false)
     {
       background(0);
@@ -49,13 +52,18 @@ public void draw()
       {
         booster.show();
       }
-      booster.move();
-      voyager.show();
-      voyager.move();
+      booster.move(); // moves rockets with spaceship
+      voyager.show(); // shows spaceship
+      voyager.move(); // movves spaceship
       
-      // checking for collisions
-      
-      for (int i = 0; i < rocks.size(); i++) 
+      if (rocks.size() <= 15)
+      {
+        // stroke(0,255,0);
+        cube.show();
+        cube.move();
+      }
+
+      for (int i = 0; i < rocks.size(); i++) // for bullets and removal of asteroids when bullets hit
       {
         for (int k = 0; k < bullet.size(); k++) 
         {
@@ -63,28 +71,37 @@ public void draw()
           {
             rocks.remove(i);
             bullet.remove(k);
+            /*rocks.add(new Asteroids());
+            for (int j = 0; j < rocks.size(); j++) // shows and moves asteroids
+            {
+                rocks.get(j).show();   
+                rocks.get(j).move();
+            }*/
+            
             break;
           }
         }
-
-        if ( dist( voyager.getX(), voyager.getY(), rocks.get(i).getX(), rocks.get(i).getY() ) <= 25 )
+      } 
+      for (int e = 0; e < rocks.size(); e++) // for destruction of the spacecraft
+      {
+        if ( dist( voyager.getX(), voyager.getY(), rocks.get(e).getX(), rocks.get(e).getY() ) <= 25 )
         {
           // animation of destruction
           voyager.setColor(0);
           booster.setColor(0);
           ofSpaceship.add(new Destruction(voyager));
-          gameOver = true;
-        } 
+          // gameOver = true;
+        }
       }
     }
-    if (gameOver == true)
+    /* if (gameOver == true)
     {
       background(255,255,255);
        textSize(40);
        text("BOOM!!!", 400, 500);
        text("YOUR SHIP WAS DESTROYED.", 200, 550);
        text("Please Refresh your screen to continue.", 200, 600);
-    }
+    } */
   }
 public void keyPressed() 
    {
@@ -123,6 +140,59 @@ public void keyPressed()
           booster.setX( myVariable );
       }
    }
+
+class Borg extends Floater // random ufo that comes out and shoots the spaceship
+{
+  private int speed;
+  public Borg()
+  {
+    speed = 1;
+    corners = 13;  //the number of corners, a triangular floater has 3   
+    int[] xS = { 50, 50, -50, -50, 50, 75, 75, -15, -50, 50, 75, 75, 50};  
+    int[] yS = { 50, -50, -50, 50, 50, 25, -75, -75, -50, -50, -75, 25, 50};  
+    xCorners = xS;
+    yCorners = yS; 
+    myColor = color(32,32,32);   
+    myCenterX = 300;//(int)(Math.random()*1000);
+    myCenterY = 300;//(int)(Math.random()*1000); //holds center coordinates   
+    myDirectionX = (int)(Math.random()*2);
+    myDirectionY = (int)(Math.random()*2); //holds x and y coordinates of the vector for direction of travel   
+    myPointDirection = 0; //holds current direction the ship is pointing in degrees
+  } 
+  public void setX(int x){ myCenterX = x; }
+  public int getX() { return (int)myCenterX; }
+  public void setY(int y) { myCenterY = y; }
+  public int getY() { return (int)myCenterY;  }
+  public void setDirectionX(double x) { myDirectionX = x; }
+  public double getDirectionX() { return (int)myDirectionX; }
+  public void setDirectionY(double y) {  myDirectionY = y; }
+  public double getDirectionY()  { return (int)myDirectionY; }
+  public void setPointDirection(int degrees) { myPointDirection = degrees; }
+  public double getPointDirection() { return (int)myPointDirection; }   
+
+  public void move()
+  {
+    rotate(speed);
+    super.move();
+  }
+  public void show()  // Draws the floater at the current position  
+  {             
+    fill(myColor);   
+    stroke(0,0,255);    
+    //convert degrees to radians for sin and cos         
+    double dRadians = myPointDirection*(Math.PI/180);                 
+    int xRotatedTranslated, yRotatedTranslated;    
+    beginShape();         
+    for(int nI = 0; nI < corners; nI++)    
+    {     
+      //rotate and translate the coordinates of the floater using current direction 
+      xRotatedTranslated = (int)((xCorners[nI]* Math.cos(dRadians)) - (yCorners[nI] * Math.sin(dRadians))+myCenterX);     
+      yRotatedTranslated = (int)((xCorners[nI]* Math.sin(dRadians)) + (yCorners[nI] * Math.cos(dRadians))+myCenterY);      
+      vertex(xRotatedTranslated,yRotatedTranslated);    
+    }   
+    endShape(CLOSE);  
+  }   
+}
 class Destruction extends Floater // destruction of ship when it hits asteroid
 {
   public Destruction(SpaceShip aShip)
@@ -154,6 +224,8 @@ class Destruction extends Floater // destruction of ship when it hits asteroid
    {
       super.move();
    }
+
+   
 }
 class Stars // background
 {
@@ -334,46 +406,16 @@ class Asteroids extends Floater
     rotate(speed);
     super.move();
   }
-  public void setX(int x)
-     {
-        myCenterX = x;
-     }
-   public int getX()
-     {
-        return (int)myCenterX;
-     }
-   public void setY(int y)
-     {
-        myCenterY = y;
-     }
-   public int getY()
-     {
-        return (int)myCenterY;
-     }
-   public void setDirectionX(double x)
-     {
-        myDirectionX = x;
-     }
-   public double getDirectionX()
-     {
-        return (int)myDirectionX;
-     }
-   public void setDirectionY(double y)
-     {
-        myDirectionY = y;
-     }
-   public double getDirectionY() 
-     {
-        return (int)myDirectionY;  
-     }
-   public void setPointDirection(int degrees)
-     {
-        myPointDirection = degrees;
-     }
-   public double getPointDirection() 
-     {
-       return (int)myPointDirection;
-     } 
+  public void setX(int x){ myCenterX = x; }
+  public int getX() { return (int)myCenterX; }
+  public void setY(int y) { myCenterY = y; }
+  public int getY() { return (int)myCenterY;  }
+  public void setDirectionX(double x) { myDirectionX = x; }
+  public double getDirectionX() { return (int)myDirectionX; }
+  public void setDirectionY(double y) {  myDirectionY = y; }
+  public double getDirectionY()  { return (int)myDirectionY; }
+  public void setPointDirection(int degrees) { myPointDirection = degrees; }
+  public double getPointDirection() { return (int)myPointDirection; }   
 }
 abstract class Floater // Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -433,7 +475,7 @@ abstract class Floater // Do NOT modify the Floater class! Make changes in the S
       myCenterY = height;    
     }   
   }   
-  public void show ()  //Draws the floater at the current position  
+  public void show ()  // Draws the floater at the current position  
   {             
     fill(myColor);   
     stroke(myColor);    
@@ -451,4 +493,3 @@ abstract class Floater // Do NOT modify the Floater class! Make changes in the S
     endShape(CLOSE);  
   }   
 } 
-
