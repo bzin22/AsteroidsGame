@@ -1,13 +1,14 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
 boolean gameOver = false;
 int countdown = 0;
-SpaceShip voyager = new SpaceShip();
-Borg cube = new Borg();
-Stars [] galaxy = new Stars[200];
-Rockets booster = new Rockets();
-ArrayList <Asteroids> rocks = new ArrayList <Asteroids>();
-ArrayList <Phasers> bullet = new ArrayList <Phasers>();
-ArrayList <Destruction> ofSpaceship = new ArrayList <Destruction>();
+SpaceShip voyager = new SpaceShip(); // initializing dec and initialization
+Borg cube = new Borg(); // random ufo's declaration and initalization 
+Stars [] galaxy = new Stars[200]; // background stars
+Rockets booster = new Rockets(); // ships rockets following the rocket's path
+ArrayList <Asteroids> rocks = new ArrayList <Asteroids>(); // floating asteroids
+ArrayList <Phasers> bullet = new ArrayList <Phasers>(); // ship's bullets
+ArrayList <Destruction> ofSpaceship = new ArrayList <Destruction>(); // ship's animation when it gets destroyed
+ArrayList <BorgAttack> wave1 = new ArrayList <BorgAttack>(); // borg's bullets
 
 int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
@@ -56,12 +57,22 @@ public void draw()
       voyager.show(); // shows spaceship
       voyager.move(); // movves spaceship
       
-      if (rocks.size() <= 15)
+      if (rocks.size() <= 15) // shows and moves Borg cube when player destroys asteroids
       {
         // stroke(0,255,0);
         cube.show();
         cube.move();
+        for (int u = 0; u < 20; u++) // adds new ammo for borg
+         {
+           wave1.add(new BorgAttack(cube));
+         }
       }
+      for (int q = 0; q < wave1.size(); q++) // shows & moves the borg's phasers
+       {
+         wave1.get(q).move();
+         wave1.get(q).show();
+       }
+       
 
       for (int i = 0; i < rocks.size(); i++) // for bullets and removal of asteroids when bullets hit
       {
@@ -140,6 +151,45 @@ public void keyPressed()
           booster.setX( myVariable );
       }
    }
+
+class BorgAttack extends Floater // the Borg's bullets
+{
+  private double dRadians;
+  private int nDegreesOfRotation;
+  public BorgAttack(Borg theCube)
+  {
+    myColor = color(0,0,255);   
+    myCenterX = theCube.getX();
+    myCenterY = theCube.getY(); //holds center coordinates   
+    myPointDirection = theShip.getPointDirection(); //holds current direction the ship is pointing in degrees
+    dRadians = myPointDirection*(Math.PI/180);
+    myDirectionX = 5 * Math.cos(dRadians) + theCube.getDirectionX();
+    myDirectionY = 5 * Math.sin(dRadians) + theCube.getDirectionY(); //holds x and y coordinates of the vector for direction of travel   
+  }
+   
+   public void setX(int x){ myCenterX = x; }
+   public int getX() { return (int)myCenterX; }
+   public void setY(int y) { myCenterY = y; }
+   public int getY() { return (int)myCenterY;  }
+   public void setDirectionX(double x) { myDirectionX = x; }
+   public double getDirectionX() { return (int)myDirectionX; }
+   public void setDirectionY(double y) {  myDirectionY = y; }
+   public double getDirectionY()  { return (int)myDirectionY; }
+   public void setPointDirection(int degrees) { myPointDirection = degrees; }
+   public double getPointDirection() { return (int)myPointDirection; }   
+  
+  public void move()
+  {
+    myCenterX += myDirectionX;
+    myCenterY += myDirectionY;
+  }
+  public void show()
+  {
+    noStroke();
+    fill(0,255,0);
+    ellipse( (int)myCenterX, (int)myCenterY, 5, 5);
+  }
+}
 
 class Borg extends Floater // random ufo that comes out and shoots the spaceship
 {
