@@ -27,7 +27,7 @@ public void setup()
 public void draw() 
   {
     // countdown++;
-    if (gameOver == false)
+    if (gameOver == false) // overarching if statement
     {
       background(0);
       for (int a = 0; a < ofSpaceship.size(); a++) 
@@ -56,7 +56,7 @@ public void draw()
       booster.move(); // moves rockets with spaceship
       voyager.show(); // shows spaceship
       voyager.move(); // movves spaceship
-      
+
       if (rocks.size() <= 15) // shows and moves Borg cube when player destroys asteroids
       {
         // stroke(0,255,0);
@@ -67,13 +67,19 @@ public void draw()
            wave1.add(new BorgAttack(cube));
          }
       }
+      if (cube.getX() < voyager.getX())
+      {
+        cube.setDirectionX(cube.getDirectionX()-1);
+      }
+      if (cube.getY() < voyager.getY())
+      {
+        cube.setDirectionY(cube.getDirectionY()-1);
+      }
       for (int q = 0; q < wave1.size(); q++) // shows & moves the borg's phasers
        {
          wave1.get(q).move();
          wave1.get(q).show();
        }
-       
-
       for (int i = 0; i < rocks.size(); i++) // for bullets and removal of asteroids when bullets hit
       {
         for (int k = 0; k < bullet.size(); k++) 
@@ -88,7 +94,6 @@ public void draw()
                 rocks.get(j).show();   
                 rocks.get(j).move();
             }*/
-            
             break;
           }
         }
@@ -161,7 +166,7 @@ class BorgAttack extends Floater // the Borg's bullets
     myColor = color(0,0,255);   
     myCenterX = theCube.getX();
     myCenterY = theCube.getY(); //holds center coordinates   
-    myPointDirection = theShip.getPointDirection(); //holds current direction the ship is pointing in degrees
+    myPointDirection = theCube.getPointDirection(); //holds current direction the ship is pointing in degrees
     dRadians = myPointDirection*(Math.PI/180);
     myDirectionX = 5 * Math.cos(dRadians) + theCube.getDirectionX();
     myDirectionY = 5 * Math.sin(dRadians) + theCube.getDirectionY(); //holds x and y coordinates of the vector for direction of travel   
