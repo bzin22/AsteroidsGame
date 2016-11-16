@@ -120,14 +120,28 @@ public void draw()
           count+=1;
           // gameOver = true;
         }
-        
       }
-      if (count == 2)
+      if (count == 2) // user gets two chances to live.
         {
           voyager.setColor(0);
           booster.setColor(0);
           ofSpaceship.add(new Destruction(voyager));
         }
+      if (count == 0)
+      {
+        noStroke();
+        fill(0,0,255);
+        rect(850, 100, 20, 50);
+        rect(900, 100, 20, 50);
+      }
+      if (count == 1) 
+      {
+        noStroke();
+        fill(0,0,0);
+        rect(900, 100, 20, 50);
+        fill(0,0,255);
+        rect(850, 100, 20, 50);
+      }
     }
     /* if (gameOver == true)
     {
