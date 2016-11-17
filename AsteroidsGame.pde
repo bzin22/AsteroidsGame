@@ -1,5 +1,6 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
 boolean gameOver = false;
+int count = 0;
 int countdown = 0;
 SpaceShip voyager = new SpaceShip(); // initializing dec and initialization
 Borg cube = new Borg(); // random ufo's declaration and initalization 
@@ -67,6 +68,7 @@ public void draw()
            wave1.add(new BorgAttack(cube));
          }
       }
+      /*
       if (cube.getX() < voyager.getX())
       {
         cube.setDirectionX(cube.getDirectionX()-1);
@@ -75,6 +77,7 @@ public void draw()
       {
         cube.setDirectionY(cube.getDirectionY()-1);
       }
+      */
       for (int q = 0; q < wave1.size(); q++) // shows & moves the borg's phasers
        {
          wave1.get(q).move();
@@ -108,6 +111,36 @@ public void draw()
           ofSpaceship.add(new Destruction(voyager));
           // gameOver = true;
         }
+      }
+      for (int p = 0; p < wave1.size(); p++) // for destruction of the spacecraft by the Borg
+      {
+        if ( dist( voyager.getX(), voyager.getY(), wave1.get(p).getX(), wave1.get(p).getY() ) <= 25 )
+        {
+          // animation of destruction
+          count+=1;
+          // gameOver = true;
+        }
+      }
+      if (count == 3) // user gets two chances to live.
+        {
+          voyager.setColor(0);
+          booster.setColor(0);
+          ofSpaceship.add(new Destruction(voyager));
+        }
+      if (count == 0)
+      {
+        noStroke();
+        fill(0,0,255);
+        rect(850, 100, 20, 50);
+        rect(900, 100, 20, 50);
+      }
+      if (count == 1) 
+      {
+        noStroke();
+        fill(0,0,0);
+        rect(900, 100, 20, 50);
+        fill(0,0,255);
+        rect(850, 100, 20, 50);
       }
     }
     /* if (gameOver == true)
@@ -203,7 +236,7 @@ class Borg extends Floater // random ufo that comes out and shoots the spaceship
   {
     speed = 1;
     corners = 13;  //the number of corners, a triangular floater has 3   
-    int[] xS = { 50, 50, -50, -50, 50, 75, 75, -15, -50, 50, 75, 75, 50};  
+    int[] xS = { 50, 50, -50, -50, 50, 75, 75, -15, -50, 50, 75, 75, 50};  // this is way too complicated :( 
     int[] yS = { 50, -50, -50, 50, 50, 25, -75, -75, -50, -50, -75, 25, 50};  
     xCorners = xS;
     yCorners = yS; 
