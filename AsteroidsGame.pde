@@ -1,7 +1,8 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
 boolean gameOver = false;
-int count = 0;
-int countdown = 0;
+int lives = 2;
+int countDown = 0;
+boolean check = true;
 SpaceShip voyager = new SpaceShip(); // initializing dec and initialization
 Borg cube = new Borg(); // random ufo's declaration and initalization 
 Stars [] galaxy = new Stars[200]; // background stars
@@ -27,7 +28,7 @@ public void setup()
   }
 public void draw() 
   {
-    // countdown++;
+    
     if (gameOver == false) // overarching if statement
     {
       background(0);
@@ -58,26 +59,46 @@ public void draw()
       voyager.show(); // shows spaceship
       voyager.move(); // movves spaceship
 
-      if (rocks.size() <= 15) // shows and moves Borg cube when player destroys asteroids
+      if (rocks.size() <= 30) // shows and moves Borg cube when player destroys asteroids
       {
-        // stroke(0,255,0);
+        stroke(0,255,0);
         cube.show();
         cube.move();
         for (int u = 0; u < 20; u++) // adds new ammo for borg
          {
            wave1.add(new BorgAttack(cube));
+          
          }
+      } 
+   /*   for (int q = 0; q < wave1.size(); q++)
+      {
+         if (wave1.getX() > 1000 || wave1.getX() < 0)
+           {
+              wave1.remove(u);
+           }
+           if (wave1.getY() > 1000 || wave1.getY() < 0)
+           {
+              wave1.remove(u);
+           }
       }
-      /*
+  */    
       if (cube.getX() < voyager.getX())
       {
-        cube.setDirectionX(cube.getDirectionX()-1);
+        cube.setDirectionX(1);
       }
       if (cube.getY() < voyager.getY())
       {
-        cube.setDirectionY(cube.getDirectionY()-1);
+        cube.setDirectionY(1);
       }
-      */
+      if (cube.getX() > voyager.getX())
+      {
+        cube.setDirectionX(-1);
+      }
+      if (cube.getY() > voyager.getY())
+      {
+        cube.setDirectionY(-1);
+      }
+      
       for (int q = 0; q < wave1.size(); q++) // shows & moves the borg's phasers
        {
          wave1.get(q).move();
@@ -114,34 +135,25 @@ public void draw()
       }
       for (int p = 0; p < wave1.size(); p++) // for destruction of the spacecraft by the Borg
       {
-        if ( dist( voyager.getX(), voyager.getY(), wave1.get(p).getX(), wave1.get(p).getY() ) <= 25 )
+        if ( dist( voyager.getX(), voyager.getY(), wave1.get(p).getX(), wave1.get(p).getY() ) <= 25 && check == true)
         {
           // animation of destruction
-          count+=1;
+          lives--;
+          System.out.println("You ded " + lives);
+          check = false;
+          countDown = 120;
           // gameOver = true;
         }
       }
-      if (count == 2) // user gets two chances to live.
-        {
-          voyager.setColor(0);
-          booster.setColor(0);
-          ofSpaceship.add(new Destruction(voyager));
-        }
-      if (count == 0)
+      if (countDown > 0)
       {
-        noStroke();
-        fill(0,0,255);
-        rect(850, 100, 20, 50);
-        rect(900, 100, 20, 50);
+        countDown--;
       }
-      if (count == 1) 
+      else
       {
-        noStroke();
-        fill(0,0,0);
-        rect(900, 100, 20, 50);
-        fill(0,0,255);
-        rect(850, 100, 20, 50);
+        check = true;
       }
+      
     }
     /* if (gameOver == true)
     {
