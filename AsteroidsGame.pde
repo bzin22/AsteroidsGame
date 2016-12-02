@@ -1,17 +1,20 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
-boolean gameOver = false;
-int count = 0;
-int countdown = 0;
+boolean gameOver = false; // checks if game is over
+boolean check = true; 
+int lives = 26; // records number of lives
+int score = 0;
+int countDown = 0; // allows system to contiuue to subtract lives
+int myVariable; // used for setting the hyperspace variable to one common number
 SpaceShip voyager = new SpaceShip(); // initializing dec and initialization
-Borg cube = new Borg(); // random ufo's declaration and initalization 
+Borg cube = new Borg(); // random ufo's declaration and initalization
+Rockets booster = new Rockets(); // ships rockets following the rocket's path 
 Stars [] galaxy = new Stars[200]; // background stars
-Rockets booster = new Rockets(); // ships rockets following the rocket's path
 ArrayList <Asteroids> rocks = new ArrayList <Asteroids>(); // floating asteroids
 ArrayList <Phasers> bullet = new ArrayList <Phasers>(); // ship's bullets
 ArrayList <Destruction> ofSpaceship = new ArrayList <Destruction>(); // ship's animation when it gets destroyed
 ArrayList <BorgAttack> wave1 = new ArrayList <BorgAttack>(); // borg's bullets
 
-int myVariable; // used for setting the hyperspace variable to one common number
+
 public void setup() 
   {
     size(1000, 1000);
@@ -19,7 +22,6 @@ public void setup()
     {
         galaxy[i] = new Stars();   
     }
-   
     for (int j = 0; j < 20; j++) 
     {
       rocks.add(new Asteroids());
@@ -27,10 +29,13 @@ public void setup()
   }
 public void draw() 
   {
-    // countdown++;
     if (gameOver == false) // overarching if statement
     {
       background(0);
+      stroke(255,255,255);
+      textSize(20);
+      text("Remaining Lives: " + lives, 50, 50);
+      text("Score: " + score, 900, 50);
       for (int a = 0; a < ofSpaceship.size(); a++) 
       {
         ofSpaceship.get(a).move();
@@ -58,26 +63,45 @@ public void draw()
       voyager.show(); // shows spaceship
       voyager.move(); // movves spaceship
 
-      if (rocks.size() <= 15) // shows and moves Borg cube when player destroys asteroids
+      if (rocks.size() <= 5) // shows and moves Borg cube when player destroys asteroids
       {
-        // stroke(0,255,0);
+        stroke(0,255,0);
         cube.show();
         cube.move();
         for (int u = 0; u < 20; u++) // adds new ammo for borg
          {
            wave1.add(new BorgAttack(cube));
          }
-      }
-      /*
-      if (cube.getX() < voyager.getX())
+      } 
+      for (int q = 0; q < wave1.size(); q++) // removes bullets when they go off the screen to minimize array size
       {
-        cube.setDirectionX(cube.getDirectionX()-1);
+         if (wave1.get(q).getX() > 1000 || wave1.get(q).getX() < 0)
+           {
+              wave1.remove(q);
+           }
+           if (wave1.get(q).getY() > 1000 || wave1.get(q).getY() < 0)
+           {
+              wave1.remove(q);
+           }
+      }
+      // allows for the cube to follow the spaceship    
+      if (cube.getX() < voyager.getX()) 
+      {
+        cube.setDirectionX(1);
       }
       if (cube.getY() < voyager.getY())
       {
-        cube.setDirectionY(cube.getDirectionY()-1);
+        cube.setDirectionY(1);
       }
-      */
+      if (cube.getX() > voyager.getX())
+      {
+        cube.setDirectionX(-1);
+      }
+      if (cube.getY() > voyager.getY())
+      {
+        cube.setDirectionY(-1);
+      }
+      
       for (int q = 0; q < wave1.size(); q++) // shows & moves the borg's phasers
        {
          wave1.get(q).move();
@@ -91,12 +115,7 @@ public void draw()
           {
             rocks.remove(i);
             bullet.remove(k);
-            /*rocks.add(new Asteroids());
-            for (int j = 0; j < rocks.size(); j++) // shows and moves asteroids
-            {
-                rocks.get(j).show();   
-                rocks.get(j).move();
-            }*/
+            score++;
             break;
           }
         }
@@ -106,51 +125,84 @@ public void draw()
         if ( dist( voyager.getX(), voyager.getY(), rocks.get(e).getX(), rocks.get(e).getY() ) <= 25 )
         {
           // animation of destruction
-          voyager.setColor(0);
-          booster.setColor(0);
-          ofSpaceship.add(new Destruction(voyager));
-          // gameOver = true;
+          lives--;
+          if(lives == 0)
+          {  
+            voyager.setColor(0);
+            booster.setColor(0);
+            ofSpaceship.add(new Destruction(voyager));
+             for (int w = 0; w < ofSpaceship.size(); w++)
+              {
+                 if (ofSpaceship.get(w).getX() > 1000 || ofSpaceship.get(w).getX() < 0)
+                   {
+                      ofSpaceship.remove(w);
+                   }
+                   if (ofSpaceship.get(w).getY() > 1000 || ofSpaceship.get(w).getY() < 0)
+                   {
+                      ofSpaceship.remove(w);
+                   }
+              }
+          }
+          if (countDown > 0)
+          {
+              countDown--;
+          }
+          else
+          {
+              check = true;
+          }   
         }
       }
       for (int p = 0; p < wave1.size(); p++) // for destruction of the spacecraft by the Borg
       {
-        if ( dist( voyager.getX(), voyager.getY(), wave1.get(p).getX(), wave1.get(p).getY() ) <= 25 )
+        if ( dist( voyager.getX(), voyager.getY(), wave1.get(p).getX(), wave1.get(p).getY() ) <= 25 && check == true)
         {
-          // animation of destruction
-          count+=1;
-          // gameOver = true;
+          
+          lives--;
+          System.out.println("You ded " + lives);
+          check = false;
+          countDown = 120;
         }
       }
-      if (count == 3) // user gets two chances to live.
-        {
-          voyager.setColor(0);
-          booster.setColor(0);
-          ofSpaceship.add(new Destruction(voyager));
-        }
-      if (count == 0)
+      if (countDown > 0)
       {
-        noStroke();
-        fill(0,0,255);
-        rect(850, 100, 20, 50);
-        rect(900, 100, 20, 50);
+        countDown--;
       }
-      if (count == 1) 
+      else
       {
-        noStroke();
-        fill(0,0,0);
-        rect(900, 100, 20, 50);
-        fill(0,0,255);
-        rect(850, 100, 20, 50);
+        check = true;
+      }   
+      if (lives == 0)
+      {  
+         for (int e = 0; e < 2; e++) // for destruction of the spacecraft
+          {
+              // animation of destruction
+              voyager.setColor(0);
+              booster.setColor(0);
+              ofSpaceship.add(new Destruction(voyager));
+               for (int w = 0; w < ofSpaceship.size(); w++)
+                {
+                   if (ofSpaceship.get(w).getX() > 1000 || ofSpaceship.get(w).getX() < 0)
+                     {
+                        ofSpaceship.remove(w);
+                     }
+                     if (ofSpaceship.get(w).getY() > 1000 || ofSpaceship.get(w).getY() < 0)
+                     {
+                        ofSpaceship.remove(w);
+                     }
+                }
+              // gameOver = true; 
+          }
       }
     }
-    /* if (gameOver == true)
+    else if (gameOver == true)
     {
       background(255,255,255);
        textSize(40);
        text("BOOM!!!", 400, 500);
        text("YOUR SHIP WAS DESTROYED.", 200, 550);
        text("Please Refresh your screen to continue.", 200, 600);
-    } */
+    } 
   }
 public void keyPressed() 
    {
