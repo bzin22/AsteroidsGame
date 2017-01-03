@@ -1,18 +1,21 @@
 // AsteroidsGame - Bryan Zin - AP Computer Science Fall 2016
-boolean gameOver = false;
-int lives = 2;
-int countDown = 0;
-boolean check = true;
+boolean gameOver = false; // checks if game is over
+boolean check = true; 
+int lives = 26; // records number of lives
+int borgLives = 3; // keeps track of the Borg's health
+int score = 0;
+int countDown = 0; // allows system to contiuue to subtract lives
+int myVariableX; // used for setting the hyperspace variable to one common number
+int myVariableY; 
 SpaceShip voyager = new SpaceShip(); // initializing dec and initialization
-Borg cube = new Borg(); // random ufo's declaration and initalization 
+Borg cube = new Borg(); // random ufo's declaration and initalization
+Rockets booster = new Rockets(); // ships rockets following the rocket's path 
 Stars [] galaxy = new Stars[200]; // background stars
-Rockets booster = new Rockets(); // ships rockets following the rocket's path
 ArrayList <Asteroids> rocks = new ArrayList <Asteroids>(); // floating asteroids
 ArrayList <Phasers> bullet = new ArrayList <Phasers>(); // ship's bullets
 ArrayList <Destruction> ofSpaceship = new ArrayList <Destruction>(); // ship's animation when it gets destroyed
-ArrayList <BorgAttack> wave1 = new ArrayList <BorgAttack>(); // borg's bullets
+ArrayList <BorgAttack> wave1 = new ArrayList <BorgAttack>(); // borg's bullets 
 
-int myVariable; // used for setting the hyperspace variable to one common number
 public void setup() 
   {
     size(1000, 1000);
@@ -20,7 +23,6 @@ public void setup()
     {
         galaxy[i] = new Stars();   
     }
-   
     for (int j = 0; j < 20; j++) 
     {
       rocks.add(new Asteroids());
@@ -28,10 +30,14 @@ public void setup()
   }
 public void draw() 
   {
-    
     if (gameOver == false) // overarching if statement
     {
       background(0);
+      fill(255,255,255); // fill is used to change the color of text
+      textSize(20);
+      text("Remaining Lives: " + lives, 50, 50);
+      text("Score: " + score, 900, 50);
+      text("Borg Health: " + borgLives, 850, 900);
       for (int a = 0; a < ofSpaceship.size(); a++) 
       {
         ofSpaceship.get(a).move();
@@ -54,12 +60,12 @@ public void draw()
       if (key == 's') // shows rocket booster whenever the ship acclerates
       {
         booster.show();
-      }
+      } 
       booster.move(); // moves rockets with spaceship
       voyager.show(); // shows spaceship
       voyager.move(); // movves spaceship
 
-      if (rocks.size() <= 30) // shows and moves Borg cube when player destroys asteroids
+      if (rocks.size() <= 1) // shows and moves Borg cube when player destroys asteroids
       {
         stroke(0,255,0);
         cube.show();
@@ -67,22 +73,21 @@ public void draw()
         for (int u = 0; u < 20; u++) // adds new ammo for borg
          {
            wave1.add(new BorgAttack(cube));
-          
          }
       } 
-   /*   for (int q = 0; q < wave1.size(); q++)
+      for (int q = 0; q < wave1.size(); q++) // removes bullets when they go off the screen to minimize array size
       {
-         if (wave1.getX() > 1000 || wave1.getX() < 0)
+         if (wave1.get(q).getX() > 1000 || wave1.get(q).getX() < 0)
            {
-              wave1.remove(u);
+              wave1.remove(q);
            }
-           if (wave1.getY() > 1000 || wave1.getY() < 0)
+           if (wave1.get(q).getY() > 1000 || wave1.get(q).getY() < 0)
            {
-              wave1.remove(u);
+              wave1.remove(q);
            }
       }
-  */    
-      if (cube.getX() < voyager.getX())
+      // allows for the cube to follow the spaceship    
+      if (cube.getX() < voyager.getX()) 
       {
         cube.setDirectionX(1);
       }
@@ -112,12 +117,7 @@ public void draw()
           {
             rocks.remove(i);
             bullet.remove(k);
-            /*rocks.add(new Asteroids());
-            for (int j = 0; j < rocks.size(); j++) // shows and moves asteroids
-            {
-                rocks.get(j).show();   
-                rocks.get(j).move();
-            }*/
+            score++;
             break;
           }
         }
@@ -127,22 +127,62 @@ public void draw()
         if ( dist( voyager.getX(), voyager.getY(), rocks.get(e).getX(), rocks.get(e).getY() ) <= 25 )
         {
           // animation of destruction
-          voyager.setColor(0);
-          booster.setColor(0);
-          ofSpaceship.add(new Destruction(voyager));
-          // gameOver = true;
+          lives--;
+          if(lives == 0)
+          {  
+            voyager.setColor(0);
+            booster.setColor(0); 
+            ofSpaceship.add(new Destruction(voyager));
+             for (int w = 0; w < ofSpaceship.size(); w++)
+              {
+                   if (ofSpaceship.get(w).getX() > 1000 || ofSpaceship.get(w).getX() < 0)
+                   {
+                      ofSpaceship.remove(w);
+                      countDown = 120;
+                   }
+                   if (ofSpaceship.get(w).getY() > 1000 || ofSpaceship.get(w).getY() < 0)
+                   {
+                      ofSpaceship.remove(w);
+                      countDown = 120;
+                   }
+                   if (countDown > 0)
+                    {
+                      countDown--;
+                    }
+                    else
+                    {
+                      check = true;
+                    }   
+              }
+          }
         }
+      }
+      for (int v = 0; v < bullet.size(); v++) // keeps track of the borg's lives and marks when bullets hit the borg
+      {
+        if ( dist( cube.getX(), cube.getY(), bullet.get(v).getX(), bullet.get(v).getY() ) <= 25)
+        {
+          borgLives--;
+          System.out.println("Borg Lives: " + borgLives);
+          bullet.remove(v);
+          countDown = 120;
+        }
+        if (countDown > 0)
+        {
+          countDown--;
+        }
+        else
+        {
+          check = true;
+        }   
       }
       for (int p = 0; p < wave1.size(); p++) // for destruction of the spacecraft by the Borg
       {
         if ( dist( voyager.getX(), voyager.getY(), wave1.get(p).getX(), wave1.get(p).getY() ) <= 25 && check == true)
         {
-          // animation of destruction
           lives--;
           System.out.println("You ded " + lives);
           check = false;
           countDown = 120;
-          // gameOver = true;
         }
       }
       if (countDown > 0)
@@ -152,17 +192,38 @@ public void draw()
       else
       {
         check = true;
+      }   
+      if (lives == 0)
+      {  
+         for (int e = 0; e < 2; e++) // for destruction of the spacecraft
+          {
+              // animation of destruction
+              voyager.setColor(0);
+              booster.setColor(0);
+              ofSpaceship.add(new Destruction(voyager));
+               for (int w = 0; w < ofSpaceship.size(); w++)
+                {
+                   if (ofSpaceship.get(w).getX() > 1000 || ofSpaceship.get(w).getX() < 0)
+                     {
+                        ofSpaceship.remove(w);
+                     }
+                     if (ofSpaceship.get(w).getY() > 1000 || ofSpaceship.get(w).getY() < 0)
+                     {
+                        ofSpaceship.remove(w);
+                     }
+                }
+              // gameOver = true; 
+          }
       }
-      
     }
-    /* if (gameOver == true)
+    else if (gameOver == true)
     {
       background(255,255,255);
        textSize(40);
        text("BOOM!!!", 400, 500);
        text("YOUR SHIP WAS DESTROYED.", 200, 550);
        text("Please Refresh your screen to continue.", 200, 600);
-    } */
+    } 
   }
 public void keyPressed() 
    {
@@ -194,11 +255,12 @@ public void keyPressed()
      }
      if (key == 'q') // hyperspace
       {
-          myVariable = (int)(Math.random()*1000);
-          voyager.setY( myVariable );
-          voyager.setX( myVariable );
-          booster.setY( myVariable );
-          booster.setX( myVariable );
+          myVariableX = (int)(Math.random()*1000);
+          myVariableY = (int)(Math.random()*1000);
+          voyager.setY( myVariableY );
+          voyager.setX( myVariableX );
+          booster.setY( myVariableY );
+          booster.setX( myVariableX );
       }
    }
 
@@ -253,8 +315,8 @@ class Borg extends Floater // random ufo that comes out and shoots the spaceship
     xCorners = xS;
     yCorners = yS; 
     myColor = color(32,32,32);   
-    myCenterX = 300;//(int)(Math.random()*1000);
-    myCenterY = 300;//(int)(Math.random()*1000); //holds center coordinates   
+    myCenterX = 300;// (int)(Math.random()*1000);
+    myCenterY = 300;// (int)(Math.random()*1000); //holds center coordinates   
     myDirectionX = (int)(Math.random()*2);
     myDirectionY = (int)(Math.random()*2); //holds x and y coordinates of the vector for direction of travel   
     myPointDirection = 0; //holds current direction the ship is pointing in degrees
@@ -278,7 +340,7 @@ class Borg extends Floater // random ufo that comes out and shoots the spaceship
   public void show()  // Draws the floater at the current position  
   {             
     fill(myColor);   
-    stroke(0,0,255);    
+    stroke(0,0,255);   
     //convert degrees to radians for sin and cos         
     double dRadians = myPointDirection*(Math.PI/180);                 
     int xRotatedTranslated, yRotatedTranslated;    
@@ -293,7 +355,7 @@ class Borg extends Floater // random ufo that comes out and shoots the spaceship
     endShape(CLOSE);  
   }   
 }
-class Destruction extends Floater // destruction of ship when it hits asteroid
+class Destruction extends Floater // destruction of ship when it hits asteroid/explodes from bullets
 {
   public Destruction(SpaceShip aShip)
    { 
@@ -324,9 +386,8 @@ class Destruction extends Floater // destruction of ship when it hits asteroid
    {
       super.move();
    }
-
-   
 }
+
 class Stars // background
 {
   private int radius, colors, myX, myY;
@@ -339,7 +400,7 @@ class Stars // background
   }
   public void show()
   {
-      fill(colors,colors,colors);
+      fill((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255));
       noStroke();
       ellipse( myX, myY, radius, radius);
   }
@@ -422,7 +483,7 @@ class SpaceShip extends Floater
 {   
    public SpaceShip()
      { 
-        corners = 9;  //the number of corners, a triangular floater has 3   
+        corners = 9;  //the number of corners, a triangular floater has 3. mine as 9.   
         int[] xS = { 20, 0, 0, -3, -10, -10, -3, 0, 0 } ;   
         int[] yS = { 0, -5, -10, -5, -5, 5, 5, 10, 5 } ;  
         xCorners = xS;
@@ -517,6 +578,7 @@ class Asteroids extends Floater
   public void setPointDirection(int degrees) { myPointDirection = degrees; }
   public double getPointDirection() { return (int)myPointDirection; }   
 }
+
 abstract class Floater // Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
   protected int corners;  //the number of corners, a triangular floater has 3   
